@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caminhos da Retirada · Rota Cultural Religiosa de Bela Vista e Bella Vista Norte</title>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --tinta:#241a13; --tinta2:#4a382b; --tinta3:#6f5847;
+  --areia:#f4ece0; --areia2:#e8dbc9; --papel:#fbf6ee;
+  --terra:#a4522a; --terra-esc:#7a3a1c; --ouro:#c08a2e;
+  --verde:#4a6141; --linha:rgba(36,26,19,.13);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--tinta);background:var(--papel);
+  -webkit-font-smoothing:antialiased;line-height:1.65}
+img,svg{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0}
+a{color:var(--terra-esc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.narrow{max-width:720px}
+
+/* ---------------------------------------------------------------- capa */
+header.capa{position:relative;color:#fff;overflow:hidden;
+  background:linear-gradient(160deg,#2b1b10 0%,#5d3117 45%,#a4522a 100%)}
+header.capa .ceu{position:absolute;inset:0;opacity:.5}
+header.capa .conteudo{position:relative;padding:76px 0 60px}
+.selo{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.38);
+  border-radius:999px;padding:5px 14px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+header.capa h1{font-size:clamp(38px,7.5vw,72px);margin:22px 0 6px;letter-spacing:-.01em;
+  text-shadow:0 2px 24px rgba(0,0,0,.3)}
+header.capa .sub{font-family:var(--serif);font-size:clamp(17px,2.4vw,23px);opacity:.93;max-width:33ch}
+header.capa .linha-fina{margin-top:26px;font-size:14.5px;opacity:.82;max-width:52ch}
+.capa-nums{display:flex;flex-wrap:wrap;gap:34px;margin-top:38px}
+.capa-nums div span{display:block;font-family:var(--serif);font-size:30px;line-height:1}
+.capa-nums div small{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.78}
+.parceiros{margin-top:44px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);
+  font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;opacity:.72}
+
+/* ------------------------------------------------------------- navegação */
+nav.barra{position:sticky;top:0;z-index:900;background:rgba(251,246,238,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+nav.barra .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:9px;padding-bottom:9px;
+  scrollbar-width:none}
+nav.barra .wrap::-webkit-scrollbar{display:none}
+nav.barra a{white-space:nowrap;font-size:13.5px;font-weight:600;color:var(--tinta3);
+  text-decoration:none;padding:7px 13px;border-radius:999px}
+nav.barra a:hover{background:var(--areia2);color:var(--tinta)}
+
+section{padding:62px 0}
+section.creme{background:var(--areia)}
+.olho{font-size:11.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--terra);
+  font-weight:700;margin-bottom:12px}
+h2.titulo{font-size:clamp(27px,4.2vw,40px);margin-bottom:14px}
+.chamada{font-family:var(--serif);font-size:19.5px;color:var(--tinta2);max-width:60ch}
+p{margin:0 0 15px}
+.corpo p{max-width:66ch}
+
+/* ------------------------------------------------------------------ abas */
+.abas{display:flex;gap:7px;overflow-x:auto;padding-bottom:12px;margin:26px 0 0;scrollbar-width:none}
+.abas::-webkit-scrollbar{display:none}
+.aba{flex:0 0 auto;border:1px solid var(--linha);background:#fff;border-radius:12px;
+  padding:10px 15px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;
+  color:var(--tinta3);display:flex;align-items:center;gap:9px;transition:.15s}
+.aba:hover{border-color:var(--terra);color:var(--tinta)}
+.aba[aria-selected="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.aba .n{font-family:var(--serif);font-size:16px;opacity:.65}
+.aba[aria-selected="true"] .n{opacity:.9}
+
+.painel{display:none;margin-top:22px}
+.painel.ativo{display:block;animation:sobe .28s ease}
+@keyframes sobe{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+.igreja{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:0;
+  background:#fff;border:1px solid var(--linha);border-radius:18px;overflow:hidden}
+@media(max-width:820px){.igreja{grid-template-columns:1fr}}
+.igreja .arte{background:linear-gradient(170deg,#e9d9bf,#d8bf9c);position:relative;min-height:290px;
+  display:flex;align-items:flex-end}
+.igreja .arte svg{width:100%;height:100%;position:absolute;inset:0}
+.igreja .arte .credito{position:relative;padding:11px 14px;font-size:10.5px;letter-spacing:.06em;
+  color:#5d4630;background:rgba(255,255,255,.72);border-top-right-radius:10px}
+.igreja .texto{padding:28px 30px 30px}
+.igreja h3{font-size:26px;margin-bottom:3px}
+.igreja .lugar{font-size:13px;color:var(--tinta3);margin-bottom:18px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.tag{font-size:11.5px;background:var(--areia);border:1px solid var(--linha);
+  border-radius:999px;padding:3px 11px;color:var(--tinta2)}
+.tag.festa{background:#f6ecd8;border-color:#e2cc9e;color:#7a5a12;font-weight:600}
+.tag.alerta{background:#fbeae4;border-color:#eec4b2;color:#8a3c1c}
+
+.blocos{margin-top:20px;border-top:1px solid var(--linha)}
+.bloco{border-bottom:1px solid var(--linha);padding:15px 0}
+.bloco h4{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--terra);
+  font-family:var(--sans);font-weight:700;margin-bottom:7px}
+.bloco p{font-size:15px;color:var(--tinta2);margin:0 0 9px}
+.bloco p:last-child{margin-bottom:0}
+
+/* ------------------------------------------------------------------ mapa */
+#mapa{height:520px;border-radius:18px;border:1px solid var(--linha);z-index:1}
+@media(max-width:640px){#mapa{height:420px}}
+.legenda-mapa{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-size:12.5px;color:var(--tinta3)}
+.legenda-mapa span{display:flex;align-items:center;gap:7px}
+.pino{width:15px;height:15px;border-radius:50%;border:2.5px solid #fff;
+  box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.leaflet-container,.mapboxgl-map{font-family:var(--sans)}
+.mapboxgl-popup-content{border-radius:11px;padding:11px 14px;box-shadow:0 3px 16px rgba(0,0,0,.18)}
+.mapboxgl-ctrl-attrib{font-size:10px}
+.pop b{font-family:var(--serif);font-size:15.5px;display:block;margin-bottom:2px}
+.pop small{color:#6f5847}
+.marcador{border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+  font-size:12px;font-family:var(--sans)}
+.marcador.aprox{border-style:dashed;border-color:#fff}
+
+/* --------------------------------------------------------------- roteiro */
+.etapas{counter-reset:e;margin-top:26px;border-left:2px solid var(--areia2);padding-left:0}
+.etapa{position:relative;padding:0 0 26px 46px}
+.etapa::before{counter-increment:e;content:counter(e);position:absolute;left:-15px;top:0;
+  width:28px;height:28px;border-radius:50%;background:var(--terra);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.etapa h4{font-size:17.5px;margin-bottom:3px}
+.etapa .meta{font-size:12.5px;color:var(--terra);font-weight:600;margin-bottom:5px}
+.etapa p{font-size:14.5px;color:var(--tinta2);max-width:62ch;margin:0}
+
+/* --------------------------------------------------------------- gráficos */
+.graficos{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:26px}
+@media(max-width:760px){.graficos{grid-template-columns:1fr}}
+.grafico{background:#fff;border:1px solid var(--linha);border-radius:16px;padding:20px 20px 14px}
+.grafico h4{font-size:15.5px;margin-bottom:2px}
+.grafico .nota{font-size:11.5px;color:var(--tinta3);margin-bottom:16px}
+.barras{display:flex;align-items:flex-end;gap:4px;height:150px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  height:100%;position:relative}
+.col .b{width:100%;border-radius:4px 4px 0 0;transition:.2s}
+.col:hover .b{filter:brightness(1.12)}
+.col .v{font-size:9.5px;color:var(--tinta3);margin-bottom:3px;opacity:0;transition:.15s}
+.col:hover .v{opacity:1}
+.col .m{font-size:10px;color:var(--tinta3);margin-top:6px}
+.col.melhor .m{color:var(--verde);font-weight:800}
+.faixa{display:flex;align-items:center;gap:4px;height:150px}
+.fcol{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.fcol .amplitude{width:62%;border-radius:999px;background:linear-gradient(#e0a458,#8fb3c9);position:relative}
+.fcol .m{font-size:10px;color:var(--tinta3);margin-top:6px}
+.legenda-g{display:flex;gap:15px;font-size:11.5px;color:var(--tinta3);margin-top:12px;
+  padding-top:10px;border-top:1px solid var(--linha)}
+.legenda-g span{display:flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:3px}
+
+/* --------------------------------------------------------------- cartões */
+.cartoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:16px;margin-top:26px}
+.cartao{background:#fff;border:1px solid var(--linha);border-radius:15px;padding:19px 20px}
+.cartao h4{font-size:16.5px;margin-bottom:4px}
+.cartao .tipo{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);
+  font-weight:700;margin-bottom:9px}
+.cartao p{font-size:13.5px;color:var(--tinta2);margin:0 0 7px}
+.cartao .contato{font-size:12.5px;color:var(--tinta3);border-top:1px solid var(--linha);
+  padding-top:9px;margin-top:11px}
+
+/* -------------------------------------------------------------- histórias */
+.historia{background:#fff;border:1px solid var(--linha);border-left:4px solid var(--terra);
+  border-radius:0 15px 15px 0;padding:24px 27px;margin-top:18px}
+.historia h3{font-size:21px;margin-bottom:4px}
+.historia .quem{font-size:12.5px;color:var(--terra);font-weight:600;margin-bottom:13px}
+.historia p{font-size:15px;color:var(--tinta2);max-width:70ch}
+.historia p:last-child{margin-bottom:0}
+
+/* ------------------------------------------------------------------ aviso */
+.aviso{background:#fdf4e3;border:1px solid #e8d3a4;border-radius:14px;padding:18px 21px;margin-top:26px}
+.aviso h4{font-size:15px;margin-bottom:7px;color:#7a5a12}
+.aviso p,.aviso li{font-size:13.5px;color:#6a5322;margin:0 0 6px}
+.aviso ul{margin:8px 0 0;padding-left:19px}
+
+table.dados{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px;background:#fff;
+  border:1px solid var(--linha);border-radius:14px;overflow:hidden}
+table.dados th{text-align:left;background:var(--areia);font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--tinta3);padding:11px 15px;font-weight:700}
+table.dados td{padding:11px 15px;border-top:1px solid var(--linha);color:var(--tinta2)}
+table.dados td:first-child{font-weight:600;color:var(--tinta)}
+
+footer{background:var(--tinta);color:#d9cec2;padding:52px 0 34px;font-size:13.5px}
+footer h4{color:#fff;font-size:16px;margin-bottom:11px}
+footer a{color:#e2b98a}
+.rodape-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:32px}
+footer .fontes{margin-top:34px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14);
+  font-size:12px;line-height:1.8;opacity:.72}
+footer .fontes a{color:#c9a884}
+.selo-rascunho{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.24);
+  border-radius:7px;padding:4px 11px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ CAPA -->
+<header class="capa">
+  <svg class="ceu" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sol" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffd9a0" stop-opacity=".55"/>
+        <stop offset="100%" stop-color="#ffd9a0" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <circle cx="880" cy="330" r="150" fill="url(#sol)"/>
+    <path d="M0 400 L0 352 Q 140 336 250 348 T 470 340 T 700 352 T 940 338 T 1200 350 L1200 400 Z"
+          fill="#1d120a" opacity=".55"/>
+    <path d="M0 400 L0 378 Q 200 366 380 376 T 760 372 T 1200 380 L1200 400 Z" fill="#150d06" opacity=".7"/>
+    <g fill="#1d120a" opacity=".62">
+      <rect x="196" y="300" width="52" height="52"/>
+      <path d="M190 300 L222 274 L254 300 Z"/>
+      <rect x="219" y="256" width="6" height="22"/><rect x="213" y="263" width="18" height="5"/>
+    </g>
+  </svg>
+  <div class="wrap conteudo">
+    <span class="selo">Roteiro turístico · Bela Vista · MS</span>
+    <h1>Caminhos da Retirada</h1>
+    <p class="sub">História, fé e natureza na fronteira do Rio Apa.</p>
+    <p class="linha-fina">Uma rota cultural religiosa que atravessa duas cidades, dois países e
+      cento e sessenta anos — das igrejas erguidas por um pedreiro português no campo de batalha da
+      Retirada da Laguna até a padroeira que enche as ruas do outro lado da ponte.</p>
+    <div class="capa-nums">
+      <div><span>7</span><small>igrejas</small></div>
+      <div><span>2</span><small>países</small></div>
+      <div><span>20+</span><small>atrativos</small></div>
+      <div><span>1 dia</span><small>a pé e de carro</small></div>
+    </div>
+    <p class="parceiros">Sebrae/MS · Cidade Empreendedora · Prefeitura de Bela Vista · Secretaria de Turismo</p>
+  </div>
+</header>
+
+<nav class="barra"><div class="wrap">
+  <a href="#roteiro">O roteiro</a>
+  <a href="#igrejas">As sete igrejas</a>
+  <a href="#mapa-sec">O mapa</a>
+  <a href="#dia">Um dia na rota</a>
+  <a href="#quando">Quando vir</a>
+  <a href="#historias">As histórias</a>
+  <a href="#folclore">Folclore</a>
+  <a href="#mesa">Mesa e cama</a>
+  <a href="#fronteira">A travessia</a>
+</div></nav>
+
+<!-- ════════════════════════════════════════════════════════════ ROTEIRO -->
+<section id="roteiro">
+  <div class="wrap narrow corpo">
+    <p class="olho">O roteiro</p>
+    <h2 class="titulo">A fronteira que reza dos dois lados</h2>
+    <p class="chamada">Bela Vista e Bella Vista Norte são a mesma paisagem cortada por um rio de
+      cem metros. A fé atravessou esse rio antes de qualquer ponte.</p>
+    <p style="margin-top:26px">Em 14 de agosto de 1930 chegaram a Bela Vista os primeiros
+      missionários redentoristas, vindos da Província de Baltimore, nos Estados Unidos. No ano
+      seguinte, entre 9 e 18 de agosto de 1931, realizaram a primeira missão da região e fincaram
+      uma cruz de madeira na margem direita do Rio Apa. Era uma cruz pensada para abrigar duas
+      imagens ao mesmo tempo: <strong>Nossa Senhora da Conceição, padroeira do Brasil, e Nossa
+      Senhora de Caacupé, padroeira do Paraguai</strong>. Está lá até hoje, refeita em concreto
+      em 2003.</p>
+    <p>Nos dez anos seguintes, os mesmos padres mandaram erguer a igreja de pedra, a matriz, a
+      capela de São Patrício e a casa paroquial que hoje é a prefeitura. Quase tudo pela mão de um
+      único construtor português, Luiz Louzinha. É esse conjunto — quatro templos de um lado,
+      três do outro, todos nascidos da mesma missão binacional — que este roteiro percorre.</p>
+    <p>E percorre um chão que já foi campo de batalha. Em 11 de maio de 1867, onde hoje é a
+      cidade, travou-se o combate de Nhandipá, o primeiro embate por terra da Retirada da Laguna e
+      uma das maiores batalhas campais da Guerra da Tríplice Aliança. Os mortos daquele dia deram
+      origem ao cemitério do bairro Água Doce — o mesmo bairro da Igreja de Pedra.</p>
+
+    <div class="aviso">
+      <h4>Este é um estudo prévio, não a versão final</h4>
+      <p>Todo o conteúdo veio de pesquisa documental à distância. Cada informação está marcada
+        conforme a origem, e o que falta está dito com todas as letras. Antes de virar material
+        oficial do Sebrae, este documento precisa de uma visita de campo para:</p>
+      <ul>
+        <li>confirmar a sétima igreja e as datas das festas de cada padroeiro;</li>
+        <li>tomar as coordenadas GPS dos pontos ainda sem localização precisa;</li>
+        <li>fotografar as igrejas — as ilustrações aqui são desenhos feitos a partir da
+          descrição arquitetônica documentada, não fotografias;</li>
+        <li>levantar preços de hospedagem e o horário dos postos de fronteira.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ IGREJAS -->
+<section id="igrejas" class="creme">
+  <div class="wrap">
+    <p class="olho">As sete igrejas</p>
+    <h2 class="titulo">Uma aba para cada uma</h2>
+    <p class="chamada">Quatro no Brasil, três no Paraguai — e todas as sete nascidas da mesma missão
+      redentorista que atravessou o Rio Apa em 1930.</p>
+
+    <div class="abas" role="tablist" id="abas"></div>
+    <div id="paineis"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ MAPA -->
+<section id="mapa-sec">
+  <div class="wrap">
+    <p class="olho">O mapa</p>
+    <h2 class="titulo">A rota, ponto a ponto</h2>
+    <p class="chamada">Igrejas, monumentos, mesa e cama — e a ponte que liga os dois países.
+      Pinos com borda tracejada são localizações aproximadas, à espera do GPS.</p>
+    <div style="margin-top:26px"><div id="mapa"></div></div>
+    <p id="aviso-mapa" hidden style="margin-top:11px;font-size:13px;color:#8a5a34;
+       background:#fdf4e3;border:1px solid #e8d3a4;border-radius:10px;padding:9px 13px">
+      O mapa está sendo exibido em OpenStreetMap porque o Mapbox não respondeu.
+      Todos os pontos e a rota continuam corretos.</p>
+    <div class="legenda-mapa">
+      <span><i class="pino" style="background:#a4522a"></i> Igrejas</span>
+      <span><i class="pino" style="background:#4a6141"></i> História e monumentos</span>
+      <span><i class="pino" style="background:#c08a2e"></i> Mesa e cama</span>
+      <span><i class="pino" style="background:#3d6b8a"></i> Travessia da fronteira</span>
+      <span><i class="pino" style="background:#9a9a9a;border-style:dashed"></i> Localização aproximada</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ UM DIA -->
+<section id="dia" class="creme">
+  <div class="wrap narrow">
+    <p class="olho">Um dia na rota</p>
+    <h2 class="titulo">Da missa da manhã à travessia da tarde</h2>
+    <p class="chamada">Sugestão de percurso para um dia inteiro. Tudo dentro de um raio de
+      três quilômetros, exceto a Chácara São Patrício.</p>
+    <div class="etapas" id="etapas"></div>
+    <div class="aviso">
+      <h4>Sobre os horários</h4>
+      <p>Os tempos acima são estimativa de percurso, não programação confirmada. Horário de missa,
+        de visitação e de abertura dos postos de fronteira precisam ser combinados com a Paróquia
+        Santo Afonso — (67) 3439-1466 — e com a Secretaria de Turismo — (67) 3439-5100.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ QUANDO VIR -->
+<section id="quando">
+  <div class="wrap">
+    <p class="olho">Quando vir</p>
+    <h2 class="titulo">De maio a setembro, e o miolo é julho</h2>
+    <p class="chamada">A resposta curta: venha na seca. O calor cai de 32 °C para 25 °C, a chuva
+      cai a um terço, as estradas de terra ficam transitáveis e o rio baixa e abre as praias.</p>
+
+    <div class="graficos">
+      <div class="grafico">
+        <h4>Chuva por mês</h4>
+        <p class="nota">Milímetros · climatologia de 30 anos, Bela Vista/MS</p>
+        <div class="barras" id="g-chuva"></div>
+        <div class="legenda-g">
+          <span><i class="sw" style="background:#3d6b8a"></i> Chuva acumulada no mês</span>
+          <span style="color:var(--verde);font-weight:700">Verde = janela recomendada</span>
+        </div>
+      </div>
+      <div class="grafico">
+        <h4>Temperatura por mês</h4>
+        <p class="nota">Mínima e máxima médias em °C · mesma série</p>
+        <div class="faixa" id="g-temp"></div>
+        <div class="legenda-g">
+          <span><i class="sw" style="background:linear-gradient(#e0a458,#8fb3c9)"></i>
+            Da mínima à máxima média do mês</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap narrow corpo" style="padding:0;margin-top:34px">
+      <p><strong>Por que julho.</strong> É o mês mais seco do ano — 56 mm, contra 185 mm em
+        dezembro — e o mais fresco, com máxima média de 25 °C. Como boa parte do roteiro é a pé e
+        ao ar livre — a Igreja de Pedra, a Cruz do Apa, o cemitério histórico, as praças, a
+        travessia da ponte — isso muda a experiência inteira.</p>
+      <p><strong>E julho é o mês da cidade.</strong> O aniversário de Bela Vista é 20 de julho, e a
+        EXPOBEL, a maior festa do calendário, ocupa a segunda quinzena no Parque de Exposição Rio
+        Apa: cerca de cem mil visitantes, rodeio, festa do peão e o Encontro Estadual do Laço, que
+        em 2025 chegou à 57ª edição — tradição que remonta a antes de 1968.</p>
+      <p><strong>A festa do padroeiro é logo depois:</strong> Santo Afonso Maria de Ligório,
+        1º de agosto, feriado municipal. Em 2024 a missa solene do centenário da paróquia foi nessa
+        data, com bênção do cruzeiro e procissão até a Praça do Exército. Quem quiser as duas
+        coisas — a festa da cidade e a festa da fé — vem na virada de julho para agosto.</p>
+      <p><strong>Do outro lado do rio, o eixo é maio.</strong> María Auxiliadora, padroeira de
+        Bella Vista Norte, é celebrada em 24 de maio, com serenata na véspera, procissão pelas ruas
+        e ponto facultativo decretado pela municipalidade para que todo mundo possa ir.</p>
+      <p><strong>Época a evitar:</strong> de dezembro a fevereiro. Calor de 32 °C, chuva de 146 a
+        185 mm por mês, tempestades de verão e estradas de terra encharcadas — o que inviabiliza
+        justamente os atrativos naturais do lado paraguaio.</p>
+    </div>
+
+    <table class="dados">
+      <thead><tr><th>Data</th><th>O que acontece</th><th>Onde</th></tr></thead>
+      <tbody>
+        <tr><td>24 de maio</td><td>Fiesta Patronal de María Auxiliadora — serenata, procissão, missa central</td><td>Bella Vista Norte · PY</td></tr>
+        <tr><td>20 de julho</td><td>Aniversário de Bela Vista — feriado municipal</td><td>Bela Vista · MS</td></tr>
+        <tr><td>2ª quinzena de julho</td><td>EXPOBEL — rodeio, festa do peão, Encontro Estadual do Laço</td><td>Parque de Exposição Rio Apa</td></tr>
+        <tr><td>1º de agosto</td><td>Festa de Santo Afonso, padroeiro — feriado municipal, missa solene e procissão</td><td>Igreja Matriz</td></tr>
+        <tr><td>30 de agosto</td><td>Aniversário de Bella Vista Norte — decreto presidencial de 1901</td><td>Bella Vista Norte · PY</td></tr>
+        <tr><td>Setembro</td><td>Festival del Río Apa, na Playa Municipal — entrada franca</td><td>Bella Vista Norte · PY</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12.5px;color:var(--tinta3);margin-top:12px">As demais datas devocionais —
+      São Geraldo, São Patrício, Virgen de las Mercedes — seguem o calendário litúrgico universal
+      e ainda <strong>não foram confirmadas localmente</strong>. Confirmar com a paróquia antes de
+      publicar.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ HISTÓRIAS -->
+<section id="historias" class="creme">
+  <div class="wrap narrow">
+    <p class="olho">As histórias</p>
+    <h2 class="titulo">Quatro pessoas e um rio</h2>
+    <p class="chamada">Roteiro religioso sem gente é catálogo de fachadas. Estes são os nomes que
+      dão sentido às pedras.</p>
+
+    <div class="historia">
+      <h3>Senhorinha Barbosa Lopes</h3>
+      <p class="quem">A matriarca · morreu em Bela Vista em 26 de janeiro de 1913</p>
+      <p>Casou aos catorze anos e foi levada para a Estância Monjolinho, onde hoje é Bela Vista.
+        Em 1849, viúva, foi capturada por uma patrulha militar paraguaia com os três filhos
+        pequenos e levada para o interior do Paraguai — só foi libertada por gestão diplomática do
+        futuro Visconde do Rio Branco, então representante do Brasil em Assunção.</p>
+      <p>Casou de novo, com o cunhado José Francisco Lopes. Em agosto de 1864 foi aprisionada
+        <em>outra vez</em>, com os filhos, em Horqueta, perto de Concepción. E é esse segundo
+        cativeiro que faz o marido se apresentar ao Exército Brasileiro — ele viraria o
+        <strong>Guia Lopes</strong>, o homem que conduziu a coluna na Retirada da Laguna. Quando as
+        tropas finalmente a resgataram, encontraram a família nua, descalça e faminta.</p>
+      <p>Analfabeta e viúva outra vez, brigou na Justiça pela herança dos filhos numa sociedade que
+        não fazia isso por mulheres. Morreu em Bela Vista, lembrada por natureza generosa, madrinha
+        de festas da cidade. Está no cemitério histórico do Água Doce. A Câmara Municipal registra
+        que "foram os Lopes, secundados pelos Barbosas, as primeiras famílias a se radicar em terras
+        de Bela Vista" — ou seja, ela é literalmente a origem da cidade.</p>
+    </div>
+
+    <div class="historia">
+      <h3>Luiz Louzinha</h3>
+      <p class="quem">O construtor português · o arquiteto anônimo do centro histórico</p>
+      <p>Um nome que aparece em quatro fichas de patrimônio diferentes e em nenhum lugar como
+        autor. Louzinha — grafado também Lousinha, apelidado "o portuguezinho" — ergueu, sob as
+        ordens dos padres redentoristas: a <strong>Igreja de Pedra</strong>, concluída em 24 de
+        janeiro de 1932; a <strong>Igreja Matriz de Santo Afonso</strong>, de 1932 a 1934; o
+        <strong>Paço Municipal</strong>, também de 1932, que nasceu como residência dos padres e só
+        virou prefeitura em 15 de março de 1985; e o <strong>Bar Bossa Nova</strong>, de 1939,
+        colado ao antigo Cine São José.</p>
+      <p>Quatro prédios, uma década, um homem. O centro histórico de Bela Vista tem autor — e o
+        roteiro pode ser lido como uma obra completa dele.</p>
+    </div>
+
+    <div class="historia">
+      <h3>Silvino Jacques</h3>
+      <p class="quem">O último dos bandoleiros · morto em 20 de maio de 1939</p>
+      <p>Gaúcho de São Borja, afilhado de Getúlio Vargas, chegou à região aos 23 anos fugido da
+        prisão. Ficou famoso na fronteira entre 1929 e 1939, sempre de bombacha, lenço e chapéu
+        grande. Teve comércio, foi fotógrafo, lutou ao lado dos legalistas na Revolução de 1932 e
+        depois virou pistoleiro a serviço dos coronéis da fronteira.</p>
+      <p>Morreu de bala de fuzil disparada pelo delegado Orcírio dos Santos — pai do futuro
+        governador Zeca do PT — à beira do Rio da Prata. Foi atingido de manhã, na névoa, ainda
+        revidou com o revólver .44 e morreu no dia seguinte.</p>
+      <p>O detalhe que faz dele material de roteiro: <strong>ele foi seu próprio cronista.</strong>
+        Compôs as "Décimas Gaúchas", versos autobiográficos em que se descreve como um gaúcho
+        decente porém predestinado a sofrer — e essas décimas entraram na tradição oral. O romance
+        de Brígido Ibanhes sobre ele foi apreendido judicialmente em 1986 e só liberado pelo
+        Tribunal de Justiça em 1992.</p>
+      <p><em>A fronteira nunca decidiu se Silvino foi herói ou bandido.</em> A leitura romântica o
+        vê como justiceiro contra o latifúndio; a documentação mostra que ele serviu a
+        latifundiários e perseguiu colonos paraguaios. As duas versões existem — e um roteiro
+        honesto conta as duas.</p>
+    </div>
+
+    <div class="historia">
+      <h3>O combate de Nhandipá</h3>
+      <p class="quem">11 de maio de 1867 · onde hoje é a cidade</p>
+      <p>A travessia do Rio Apa levou mais de quatro horas. Por volta das onze da manhã, a linha
+        de atiradores do 17º Batalhão de Voluntários foi atacada de surpresa pela infantaria
+        paraguaia, seguida de uma carga furiosa de cavalaria. Os brasileiros formaram quadrados
+        defensivos; a artilharia respondeu com granadas; os cavalos inimigos caíram espetados nas
+        baionetas do 21º Batalhão. Um relatório oficial descreve "uma luta terrível, homem contra
+        homem".</p>
+      <p>O campo ficou sob controle brasileiro — mas o gado de provisões se dispersou no combate.
+        Faltavam vinte e cinco léguas de marcha. É esse detalhe logístico, e não a derrota, que
+        transforma a Retirada da Laguna em tragédia.</p>
+      <p>O Monumento Internacional da Batalha de Nhandipá foi erguido em 1931, no local exato. Os
+        mortos foram sepultados onde hoje é o cemitério histórico do bairro Água Doce.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ FOLCLORE -->
+<section id="folclore">
+  <div class="wrap">
+    <p class="olho">Cultura e folclore</p>
+    <h2 class="titulo">O que se canta, o que se teme e o que se toma</h2>
+    <p class="chamada">Na faixa de fronteira do Apa a cultura é guarani, gaúcha e paraguaia ao
+      mesmo tempo — e às vezes na mesma frase.</p>
+
+    <div class="cartoes">
+      <div class="cartao">
+        <p class="tipo">Lenda · a mãe da erva</p>
+        <h4>Caá Yarí</h4>
+        <p>Tupã desceu disfarçado de viajante e foi acolhido por um velho e sua filha, que
+          dividiram com ele o pouco que tinham. Em troca, levou-os ao coração da mata e revelou uma
+          planta desconhecida — a ka'a, a erva-mate — ensinando a secar, moer e infundir as folhas.</p>
+        <p>É a lenda que amarra tudo: liga o folclore guarani ao ciclo ervateiro que povoou Bela
+          Vista e ao tereré que se toma na praça hoje.</p>
+      </div>
+      <div class="cartao">
+        <p class="tipo">Lenda · o senhor da noite</p>
+        <h4>O Pombero</h4>
+        <p>Baixo, peludo, de pés virados para trás. Anda em silêncio absoluto e imita assobios de
+          aves, risadas e vozes familiares. É protetor do mato: castiga quem caça por abuso e
+          quebra armadilhas.</p>
+        <p>Oferece-se a ele tabaco, caña e mel. Com respeito, abençoa a colheita e protege a casa.
+          Sem, fica vingativo.</p>
+      </div>
+      <div class="cartao">
+        <p class="tipo">Lenda · a hora da sesta</p>
+        <h4>Jasy Jateré</h4>
+        <p>Menino de cabelos dourados e varinha de ouro, que fica invisível e leva crianças que
+          saem sozinhas <em>durante a sesta</em>. É o mito do meio-dia — usado até hoje na fronteira
+          para que criança não saia no sol forte.</p>
+        <p>É um dos sete monstros nascidos da união de Tau com Kerana, junto com Teju Jagua, Mbói
+          Tu'ĩ, Moñái, Kurupí, Ao Ao e o Luisón — o lobisomem guarani, que ronda cemitérios.</p>
+      </div>
+      <div class="cartao">
+        <p class="tipo">Música</p>
+        <h4>Polca, chamamé e chovena</h4>
+        <p>A Fundação de Cultura de MS classifica as danças por região, e à faixa de fronteira
+          atribui polca, chamamé e chovena — não o siriri e o cururu, que são do Pantanal e do vale
+          cuiabano.</p>
+        <p>Some a isso a guarânia e a polca paraguaia que atravessam a ponte, e o artesanato de
+          renda nhanduti.</p>
+      </div>
+      <div class="cartao">
+        <p class="tipo">Língua</p>
+        <h4>Jopara e portunhol</h4>
+        <p>Há estudo acadêmico específico sobre o português falado aqui: "Contato entre línguas na
+          fronteira Bela Vista – Bella Vista Norte", da revista Claraboia/UENP, sobre a influência
+          do espanhol e do guarani no português bela-vistense.</p>
+        <p>Cerca de 300 mil descendentes de paraguaios vivem em MS, e metade fala ou entende essas
+          misturas. O poeta Douglas Diégues batizou a variedade de "portunhol selvagem".</p>
+      </div>
+      <div class="cartao">
+        <p class="tipo">Mesa</p>
+        <h4>Chipa, sopa paraguaia, tereré</h4>
+        <p>A chipa — polvilho e queijo em formato de ferradura — tem reconhecimento acadêmico como
+          patrimônio alimentar da fronteira Brasil-Paraguai. A sopa paraguaia, apesar do nome, não
+          é sopa: é um bolo salgado de milho, cebola e queijo.</p>
+        <p>E o tereré, que é a Companhia Matte Larangeira sobrevivendo na guampa da praça.</p>
+      </div>
+    </div>
+
+    <div class="wrap narrow corpo" style="padding:0;margin-top:36px">
+      <h3 style="font-size:22px;margin-bottom:12px">O ciclo da erva-mate</h3>
+      <p>Bela Vista é terra ervateira por definição. A Companhia Matte Larangeira nasceu de
+        concessão imperial a Thomaz Larangeira por serviços na Guerra do Paraguai, com primeira sede
+        em Concepción e operação desde 1877. Em 1895 o arrendamento passava de cinco milhões de
+        hectares. Foram os gaúchos atraídos pela erva-mate que completaram o povoamento da cidade —
+        e é isso que explica bombacha e chimarrão numa cidade de fronteira guarani.</p>
+      <p>O reverso é duro e está documentado: cerca de dez mil trabalhadores nos ervais, pagos em
+        "giro", papel-moeda da própria empresa que só circulava na região; sistema de barracão, em
+        que o salário voltava para a empresa em mercadoria e o trabalhador se endividava; os
+        conchavadores, que aliciavam e depois vigiavam; os tarefeiros, que carregavam o raído nas
+        costas. A principal forma de resistência era a fuga.</p>
+      <p>Bela Vista integra a rota estadual <strong>Caminho para os Ervais</strong>, itinerário
+        cultural nascido no mestrado em Desenvolvimento Regional da UEMS, que tem como modelo
+        declarado a Paisagem Cultural Cafeeira Colombiana e como objetivo constituir uma "paisagem
+        cultural ervateira" na fronteira.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ MESA E CAMA -->
+<section id="mesa" class="creme">
+  <div class="wrap">
+    <p class="olho">Mesa e cama</p>
+    <h2 class="titulo">Onde comer e onde dormir</h2>
+    <p class="chamada">Levantamento a partir do inventário da Prefeitura e de diretórios públicos.
+      Nenhuma fonte publica preço de diária — isso vem do campo.</p>
+    <div class="cartoes" id="mesa-cama"></div>
+    <div class="aviso">
+      <h4>Lacunas assumidas</h4>
+      <p>Não há preço de hospedagem publicado em nenhuma fonte — nem Booking, nem TripAdvisor, nem
+        guias locais. Os telefones dos hotéis paraguaios vêm de reportagem de 2021 e precisam ser
+        revalidados. E não encontrei nenhum restaurante de Bella Vista Norte listado em fonte
+        alguma: esse levantamento é de campo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ A TRAVESSIA -->
+<section id="fronteira">
+  <div class="wrap">
+    <p class="olho">A travessia</p>
+    <h2 class="titulo">Como se cruza para o outro lado</h2>
+    <p class="chamada">Pela ponte internacional sobre o Rio Apa, inaugurada em 1971 no fim da
+      BR-060. Da aduana brasileira ao posto paraguaio são uns seiscentos metros.</p>
+
+    <table class="dados">
+      <thead><tr><th>Item</th><th>Como funciona</th></tr></thead>
+      <tbody>
+        <tr><td>Documento</td><td>Brasileiro não precisa de visto. Vale o RG ou o passaporte — passaporte não é obrigatório.</td></tr>
+        <tr><td>Registro</td><td>Com passaporte, recebe carimbo. Com RG, recebe a "Boleta de Entrada y Salida" — guarde, ela precisa ser devolvida na saída.</td></tr>
+        <tr><td>Visita de um dia</td><td>A norma manda registrar entrada e saída mesmo na ida e volta no mesmo dia. Oriente o visitante a registrar.</td></tr>
+        <tr><td>Menores</td><td>Mesmo tratamento, com boleta própria.</td></tr>
+        <tr><td>Carro próprio</td><td>CNH válida, CRLV e seguro internacional com cobertura Mercosul. Triângulo, extintor, estepe e kit de primeiros socorros.</td></tr>
+        <tr><td>Cota de compras</td><td>US$ 500 por pessoa por via terrestre. Acima disso, e-DBV obrigatória.</td></tr>
+        <tr><td>Horário dos postos</td><td><strong>Não publicado em nenhuma fonte.</strong> Ligue antes.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="wrap narrow corpo" style="padding:0;margin-top:34px">
+      <h3 style="font-size:22px;margin-bottom:12px">Como chegar a Bela Vista</h3>
+      <p>De Campo Grande são 326 km pela BR-060, cerca de quatro horas e meia a cinco de carro,
+        passando por Sidrolândia, Nioaque, Guia Lopes da Laguna e Jardim. De ônibus, a Viação
+        Cruzeiro do Sul faz o trecho em 5h30, com duas saídas por dia em cada sentido — e é a única
+        linha que serve a cidade.</p>
+      <p>De Jardim são 89 km; de Ponta Porã, 137 km; de Dourados, 243 km. O aeroporto mais próximo
+        com voo comercial é o de Ponta Porã, mas atende só uma rota, para Campinas — para grupos, o
+        acesso real é por Campo Grande.</p>
+      <p>Do lado paraguaio, Bella Vista Norte fica a 150 km de Pedro Juan Caballero e a 469 km de
+        Assunção.</p>
+
+      <h3 style="font-size:22px;margin:30px 0 12px">O que há do outro lado, além das igrejas</h3>
+      <p>Bella Vista Norte guarda dois atrativos naturais raros. O <strong>Kururu Kua</strong> —
+        "buraco do sapo", em guarani — é um cenote com uns cem metros de profundidade até o espelho
+        d'água e trezentos de diâmetro, formado em arenito e não em calcário, o que é
+        geologicamente incomum. Ficou escondido até 2007. E o <strong>Ojo de Mar</strong>, lago
+        calcário de água cristalina esverdeada, com formação estimada em mais de 250 milhões de
+        anos.</p>
+      <p>Os dois ficam a 50-57 km do centro, por estrada de terra, dentro ou perto de propriedade
+        privada, e <strong>praticamente sem infraestrutura</strong> — o Ojo de Mar tem só um
+        mirante pequeno e uma escadinha. Se entrarem no roteiro, entram com agendamento prévio na
+        Municipalidad, veículo alto, restrição à estação seca e aviso de que não são acessíveis a
+        pessoas com mobilidade reduzida.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="selo-rascunho">Estudo prévio · agosto de 2026</span>
+    <div class="rodape-cols" style="margin-top:26px">
+      <div>
+        <h4>Caminhos da Retirada</h4>
+        <p>Roteiro turístico binacional de Bela Vista (MS) e Bella Vista Norte (Amambay, Paraguai),
+          previsto no Plano de Desenvolvimento Municipal dentro do programa Cidade Empreendedora.</p>
+      </div>
+      <div>
+        <h4>Contatos úteis</h4>
+        <p>Paróquia Santo Afonso · (67) 3439-1466<br>
+           Secretaria de Turismo e Meio Ambiente · (67) 3439-5100<br>
+           Sala do Empreendedor · (67) 99891-4142</p>
+      </div>
+      <div>
+        <h4>Como este documento foi feito</h4>
+        <p>Pesquisa documental à distância, em fontes públicas brasileiras e paraguaias. As
+          ilustrações das igrejas são desenhos vetoriais feitos a partir da descrição arquitetônica
+          registrada no inventário municipal — <strong>não são fotografias nem imagens geradas por
+          IA a partir de fotos reais</strong>.</p>
+      </div>
+    </div>
+    <div class="fontes">
+      <strong style="color:#fff">Fontes principais:</strong>
+      Prefeitura de Bela Vista — inventário turístico e página de história ·
+      Câmara Municipal de Bela Vista ·
+      <a href="https://ms.agenciasebrae.com.br/cultura-empreendedora/bela-vista-planeja-roteiro-turistico-com-foco-em-historia-fe-e-natureza/">Agência Sebrae de Notícias MS, 23/07/2026</a> ·
+      Fronteira News (centenário da Paróquia Santo Afonso; morte de Silvino Jacques) ·
+      Diocese de Jardim e Diócesis de Concepción ·
+      ABC Color e La Nación (PY) — Fiesta Patronal de María Auxiliadora e atrativos naturais ·
+      Campo Grande News (Senhorinha Lopes; Silvino Jacques) ·
+      Climatempo e WeatherSpark — climatologia de Bela Vista ·
+      Fundação de Cultura de MS e Fundtur-MS — danças, gastronomia de fronteira ·
+      Revista Espacio, Tiempo y Forma / UNED — "A proposta do caminho para os ervais" ·
+      LEHMT e SciELO — trabalho nos ervais e a chipa como patrimônio alimentar ·
+      OpenStreetMap — coordenadas.
+    </div>
+  </div>
+</footer>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════ AS SETE IGREJAS
+   Cada ficha traz `fonte` dizendo de onde veio o dado, e `pendente:true`
+   quando é a lacuna a fechar em campo. Nada aqui é inventado: o que não
+   tem fonte está escrito como não encontrado. */
+
+const IGREJAS = [
+  {
+    id:"matriz", n:1, nome:"Igreja Matriz de Santo Afonso",
+    curto:"Matriz de Santo Afonso",
+    lugar:"Rua Santo Afonso, Centro · Bela Vista/MS",
+    lat:-22.1045, lng:-56.5350, aprox:true,
+    tags:[["Padroeiro: Santo Afonso Maria de Ligório"],["1932–1935"],
+          ["Festa: 1º de agosto","festa"],["Coordenada a confirmar","alerta"]],
+    arte:"matriz",
+    blocos:[
+      ["A igreja",
+       "A paróquia foi criada em 4 de abril de 1924 pelos missionários redentoristas Francis John Mohr, Alphonse Hild e William Fee. O templo começou a ser erguido em 1932, ficou pronto em 1934 e foi inaugurado em 1935, obra do construtor Luiz Louzinha sob as ordens dos padres. O inventário municipal a descreve como uma das mais bonitas de Mato Grosso do Sul."],
+      ["A arquitetura",
+       "Ecletismo de inspiração neorromântica: escadaria de acesso sobre pedestais, pilastras colossais, colunas sustentando pórtico de arco pleno, rosácea central e cruz latina coroando a fachada. Por dentro, pinturas da Paixão de Cristo e da Sagrada Família."],
+      ["O que ver de perto",
+       "Os confessionários originais dos anos 1930, preservados. E os sinos de época, ainda acionados manualmente por corda. A restauração de 2008, conduzida pelos redentoristas, recuperou a pintura interna original por prospecção arquitetônica."],
+      ["Tradição e festa",
+       "Santo Afonso Maria de Ligório, fundador dos redentoristas, é o padroeiro da cidade, e 1º de agosto é feriado municipal. Em 2024 a paróquia completou cem anos: missa solene na data, bênção do cruzeiro da Capela Divino Espírito Santo, procissão até a Praça do Exército e apresentação do Grupo Alma Serrana no dia 3."],
+      ["A confirmar em campo",
+       "As fontes divergem sobre o endereço. Uma dá Rua Santo Afonso 660, outra Rua Santo Afonso 560, e o jornal local situa a igreja na Praça do Exército, na Avenida Teodoro Sativa. Complicando: o site da Prefeitura repete “Rua Santo Afonso, 660” no rodapé de todos os atrativos — é o endereço do próprio Paço Municipal. A hipótese que reconcilia tudo é que o Paço nasceu como casa dos padres, colado à Matriz. Precisa de GPS."]
+    ]
+  },
+  {
+    id:"pedra", n:2, nome:"Igreja de Pedra “São Geraldo”",
+    curto:"Igreja de Pedra",
+    lugar:"Rua Coronel Dias, 1145, Bairro Água Doce · Bela Vista/MS",
+    lat:-22.1060, lng:-56.5340, aprox:true,
+    tags:[["Padroeiro: São Geraldo Majella"],["1930–1932"],
+          ["Alvenaria de pedra"],["Data da festa a confirmar","alerta"]],
+    arte:"pedra",
+    blocos:[
+      ["A igreja",
+       "Começou em 1930 e ficou pronta em 24 de janeiro de 1932 — a data mais precisa de todo o conjunto. Foi erguida pelo mesmo Luiz Louzinha, apelidado “o portuguezinho”, sob direção dos redentoristas, em terreno doado por Benedito Freitas. Mantém a função religiosa original e está em bom estado."],
+      ["A arquitetura",
+       "É o que dá nome à igreja: fundação e alvenaria estrutural em pedra aparente. O inventário da Prefeitura registra “pedra ciclópica” — a técnica dos blocos grandes e irregulares — e as reportagens do Sebrae falam em “pedra-canga”, que é o material, uma crosta ferruginosa. Os dois termos podem ser compatíveis; confirmar no local."],
+      ["O bairro",
+       "Água Doce é o bairro do cemitério histórico, aberto com o sepultamento dos mortos do combate de Nhandipá de 1867. Ali estão os túmulos-monumento de Dona Senhorinha Lopes, do Capitão Muzzi, do gaúcho Saladino Nunes e dos mártires do 10º RCI. A igreja de pedra e a memória da guerra dividem o mesmo pedaço de cidade."],
+      ["O padroeiro",
+       "São Geraldo Majella é santo redentorista — coerente com a congregação que mandou construir. No calendário universal é celebrado em 16 de outubro, mas não encontrei confirmação de que essa seja a data da festa em Bela Vista."],
+      ["A confirmar em campo",
+       "Não encontrei registro de ex-votos, milagres, romarias ou lendas associadas a esta igreja em nenhuma fonte. Numa igreja de pedra de quase cem anos isso é improvável — é matéria de conversa com os mais velhos da paróquia."]
+    ]
+  },
+  {
+    id:"patricio", n:3, nome:"Capela de São Patrício",
+    curto:"São Patrício",
+    lugar:"Chácara São Patrício · Bela Vista/MS",
+    lat:null, lng:null, aprox:false,
+    tags:[["Padroeiro: São Patrício"],["1935–1940"],
+          ["Sem coordenada","alerta"],["Data da festa a confirmar","alerta"]],
+    arte:"patricio",
+    blocos:[
+      ["A igreja",
+       "Edificada entre 1935 e 1940, também sob as ordens dos redentoristas. Nasceu capela e hoje pertence à Paróquia Santo Afonso. Está em bom estado, sobre embasamento com escadaria de acesso."],
+      ["A conexão irlandesa",
+       "Este é o achado mais curioso do roteiro. São Patrício é o padroeiro da Irlanda — e os fundadores da paróquia de Bela Vista vieram da Província redentorista de Baltimore, nos Estados Unidos, com nomes anglófonos: Mohr, Hild, Fee. Uma capela dedicada ao santo padroeiro da Irlanda, no meio do cerrado da fronteira guarani, erguida por padres americanos. Vale um capítulo inteiro — mas a ligação ainda precisa ser documentada."],
+      ["A chácara",
+       "A Chácara São Patrício está entre os atrativos que o Sebrae nomeou no anúncio do roteiro, descrita como propriedade rural dentro do perímetro urbano. Fora isso, não encontrei nenhuma outra informação: nem história, nem proprietário, nem data."],
+      ["Atenção ao endereço",
+       "O site da Prefeitura informa “Rua Santo Afonso, nº 660” para esta capela — que é exatamente o endereço da Matriz e do Paço Municipal. É quase certamente erro de copiar e colar no rodapé do site, já que a capela fica numa chácara. Não use esse endereço."]
+    ]
+  },
+  {
+    id:"espirito", n:4, nome:"Capela do Divino Espírito Santo",
+    curto:"Divino Espírito Santo",
+    lugar:"Bela Vista/MS · localização a confirmar",
+    lat:null, lng:null, aprox:false,
+    tags:[["Existência confirmada"],["Sem data de construção","alerta"],
+          ["Sem coordenada","alerta"]],
+    arte:"espirito",
+    blocos:[
+      ["Como apareceu",
+       "Esta capela não está no inventário turístico da Prefeitura. Ela aparece na cobertura jornalística do centenário da Paróquia Santo Afonso, em 2024: a programação de 1º de agosto incluiu a bênção do cruzeiro <em>da Capela Divino Espírito Santo</em>, antes da procissão até a Praça do Exército. Ou seja, é uma capela viva, com cruzeiro próprio e papel na festa maior da paróquia — e mesmo assim não está catalogada."],
+      ["Por que ela importa para o roteiro",
+       "Um roteiro religioso que só lista o que já está no inventário turístico apenas repete o que a cidade já sabe. Uma capela que participa da procissão do padroeiro e não está em lista nenhuma é exatamente o tipo de ativo que um trabalho de inventário do Sebrae existe para encontrar."],
+      ["O que falta",
+       "Tudo: ano de construção, quem construiu, endereço, arquitetura, dia da festa. A festa do Divino Espírito Santo é móvel — cai cinquenta dias depois da Páscoa — e nas cidades do interior costuma vir com folia, bandeira e coroação. Se houver folia do Divino em Bela Vista, é achado grande."]
+    ]
+  },
+  {
+    id:"auxiliadora", n:5, nome:"Iglesia Matriz Nuestra Señora María Auxiliadora",
+    curto:"María Auxiliadora",
+    lugar:"Bella Vista Norte · Amambay · Paraguai",
+    lat:-22.12096, lng:-56.51476, aprox:false,
+    tags:[["Padroeira: María Auxiliadora"],["Festa: 24 de maio","festa"],
+          ["Coordenada confirmada"],["Sem data de construção","alerta"]],
+    arte:"auxiliadora",
+    blocos:[
+      ["A igreja",
+       "É a matriz de Bella Vista Norte e sede da Parroquia María Auxiliadora, na Diócesis de Concepción en Paraguay — que abrange os departamentos de Concepción e Amambay e foi criada em 1929. Como do lado brasileiro, quem administra são os redentoristas. Em 2025 o pároco era o Pe. Antonio J. Morel, C.Ss.R."],
+      ["O berço da congregação no Paraguai",
+       "Aqui está o fato que dá sentido ao roteiro inteiro: <strong>os primeiros redentoristas a chegar ao Paraguai desembarcaram justamente em Bella Vista, em 27 de abril de 1930</strong>. Só em 1944 a congregação se estabeleceu em Assunção. E em 14 de agosto do mesmo 1930, os padres americanos William Fee e Rudolf Reiss cruzaram o rio para o lado brasileiro — o mesmo William Fee que consta como fundador da paróquia de Bela Vista. As duas margens têm literalmente os mesmos fundadores."],
+      ["A festa — 24 de maio",
+       "A Fiesta Patronal é o maior evento religioso do lado paraguaio. Tem novenário; na véspera, 23 de maio, a serenata, com música religiosa e dança paraguaia executadas sobretudo pelos estudantes da cidade; no dia, procissão com a imagem por várias ruas e missa central, seguida de bingo comunitário. A municipalidade decreta ponto facultativo para que todo mundo possa participar. Em 2025 uma vereadora local descreveu a participação como massiva em cada jornada."],
+      ["Laços através do rio",
+       "Não é retórica: a página oficial da Paróquia Santo Afonso, de Bela Vista, divulga a Fiesta Patronal da paróquia paraguaia. E Dom Pedro Cesário Palma, bispo de Jardim, já visitou a Parroquia María Auxiliadora — apesar de serem dioceses e países diferentes. O roteiro binacional já existe na prática pastoral; falta transformá-lo em produto turístico."],
+      ["A confirmar em campo",
+       "Não encontrei ano de construção, construtor, estilo arquitetônico nem data de ereção canônica da paróquia — nem em ABC Color, nem em La Nación, nem na Gobernación de Amambay. A Wikipédia em espanhol registra duas festividades, 24 de maio e 30 de agosto; a segunda é o aniversário da cidade."]
+    ]
+  },
+  {
+    id:"mercedes", n:6, nome:"Capilla Virgen de las Mercedes",
+    curto:"Virgen de las Mercedes",
+    lugar:"Bella Vista Norte · Amambay · Paraguai",
+    lat:null, lng:null, aprox:false,
+    tags:[["Padroeira: Virgen de las Mercedes"],["Existência confirmada"],
+          ["Sem coordenada","alerta"],["Sem data","alerta"]],
+    arte:"mercedes",
+    blocos:[
+      ["A igreja",
+       "Capela filial da Parroquia María Auxiliadora — a única capela subordinada que consegui nomear com fonte. A confirmação veio da peregrinação jubilar do Ano Santo de 2025, “Peregrinos de Esperanza”, realizada em 26 de outubro: ela <em>partiu da Capilla Virgen de las Mercedes</em> rumo ao templo paroquial."],
+      ["A caminhada que já existe",
+       "Isso é mais importante do que parece. Já existe, em Bella Vista Norte, uma peregrinação a pé de uma capela até a matriz — ou seja, o formato “caminho de fé entre dois templos” já é praticado pela comunidade local. Um roteiro que se apoia numa devoção viva tem chance real de funcionar; um que inventa o percurso do zero, não."],
+      ["O que falta",
+       "Ano, construtor, endereço, arquitetura, coordenada. Nuestra Señora de las Mercedes é celebrada em 24 de setembro no calendário universal, mas sem confirmação local."]
+    ]
+  },
+  {
+    id:"socorro", n:7, nome:"Iglesia Nuestra Señora del Perpetuo Socorro",
+    curto:"Perpetuo Socorro",
+    lugar:"Barrio Perpetuo · Bella Vista Norte · Amambay · Paraguai",
+    lat:null, lng:null, aprox:false,
+    tags:[["Padroeira: Nuestra Señora del Perpetuo Socorro"],
+          ["Devoção redentorista"],["Festa: 27 de junho","festa"],
+          ["Sem coordenada","alerta"]],
+    arte:"socorro",
+    blocos:[
+      ["A igreja que fecha o círculo",
+       "É a sétima, confirmada pelo conhecimento local. E é a que dá sentido teológico ao roteiro inteiro: <strong>Nossa Senhora do Perpétuo Socorro é a devoção mariana própria dos redentoristas</strong> — a mesma congregação que ergueu quase tudo que este roteiro percorre, dos dois lados do rio."],
+      ["Por que a devoção é redentorista",
+       "Em 1866, o papa Pio IX entregou o ícone bizantino de Nossa Senhora do Perpétuo Socorro aos missionários redentoristas com uma ordem curta e famosa: <em>“façam-na conhecida no mundo inteiro”</em>. Desde então a imagem acompanha a congregação em cada missão que ela abre. Quando os padres desembarcaram em Bella Vista em 27 de abril de 1930, trouxeram essa devoção na bagagem — como trouxeram Santo Afonso, o fundador, e São Geraldo, o santo redentorista popular. As três igrejas centrais desta rota levam nomes da mesma família religiosa."],
+      ["O bairro",
+       "Bella Vista Norte tem um bairro chamado <strong>Perpetuo</strong>, registrado no mapeamento aberto — o nome do bairro vem da igreja, como acontece em quase toda cidade de fronteira. É por ali que a visita de campo deve começar."],
+      ["A festa",
+       "No calendário universal, Nossa Senhora do Perpétuo Socorro é celebrada em <strong>27 de junho</strong>. Em paróquias redentoristas a devoção costuma ter também a novena semanal, quase sempre às quartas-feiras — se existir aqui, é um atrativo de rotina, não só de data: um roteiro religioso que oferece algo toda quarta-feira vale muito mais que um que só funciona um dia por ano. <em>Confirmar com a paróquia.</em>"],
+      ["O que ainda falta",
+       "Ano de construção, construtor, arquitetura, endereço exato e coordenada — e se ela é capela filial da Parroquia María Auxiliadora, como a Virgen de las Mercedes, ou tem estatuto próprio. Nenhuma fonte documental que consultei descreve esta igreja; a existência dela veio do conhecimento de quem é da fronteira, que neste caso vale mais que documento."],
+      ["A caminhada que se desenha sozinha",
+       "Com as três igrejas paraguaias confirmadas, o lado de lá já tem um percurso próprio: sai do Perpetuo Socorro ou da Virgen de las Mercedes, passa pela Plaza de los Héroes e termina na Matriz María Auxiliadora. A comunidade local <em>já faz isso</em> — a peregrinação jubilar de 26 de outubro de 2025 saiu da Mercedes rumo à matriz. O roteiro não precisa inventar o caminho: precisa reconhecer o que já se anda."]
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════ desenhos vetoriais das igrejas
+   Feitos a partir da descrição arquitetônica do inventário municipal.
+   São ilustrações declaradas — não simulam fotografia. */
+function arteSVG(tipo){
+  const ceu = `<defs>
+    <linearGradient id="c-${tipo}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0dcbb"/><stop offset="100%" stop-color="#d9bd93"/></linearGradient>
+    <linearGradient id="s-${tipo}" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#fffaf2"/><stop offset="100%" stop-color="#e3d3ba"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#c-${tipo})"/>
+  <circle cx="318" cy="72" r="34" fill="#fbe6c0" opacity=".85"/>`;
+  const chao = `<path d="M0 262 Q 100 254 200 260 T 400 256 L400 300 L0 300 Z" fill="#b99a70" opacity=".85"/>
+    <path d="M0 278 Q 140 272 260 278 T 400 274 L400 300 L0 300 Z" fill="#a3805a" opacity=".8"/>`;
+
+  const desenhos = {
+    /* Matriz: escadaria, pilastras colossais, pórtico de arco pleno, rosácea, cruz latina */
+    matriz:`${ceu}${chao}
+      <g fill="#8c8175"><rect x="196" y="34" width="8" height="30"/><rect x="188" y="44" width="24" height="7"/></g>
+      <path d="M120 262 L120 118 L200 62 L280 118 L280 262 Z" fill="url(#s-matriz)"/>
+      <path d="M112 122 L200 56 L288 122 Z" fill="#efe0c8" stroke="#c3ab8b" stroke-width="1.5"/>
+      <circle cx="200" cy="140" r="21" fill="#c9b391"/><circle cx="200" cy="140" r="15" fill="#7d6a52"/>
+      <g stroke="#c9b391" stroke-width="2.5"><line x1="185" y1="140" x2="215" y2="140"/>
+        <line x1="200" y1="125" x2="200" y2="155"/><line x1="189" y1="129" x2="211" y2="151"/>
+        <line x1="211" y1="129" x2="189" y2="151"/></g>
+      <g fill="#e0cfb2"><rect x="133" y="150" width="15" height="112"/><rect x="156" y="150" width="15" height="112"/>
+        <rect x="229" y="150" width="15" height="112"/><rect x="252" y="150" width="15" height="112"/></g>
+      <path d="M178 262 L178 208 Q200 184 222 208 L222 262 Z" fill="#6b5439"/>
+      <path d="M182 258 L182 210 Q200 190 218 210 L218 258 Z" fill="#8a6c48"/>
+      <g fill="#d6c3a4"><rect x="112" y="262" width="176" height="8"/><rect x="104" y="270" width="192" height="8"/>
+        <rect x="96" y="278" width="208" height="8"/></g>
+      <g fill="#c9b391"><rect x="146" y="172" width="12" height="26" rx="6"/><rect x="242" y="172" width="12" height="26" rx="6"/></g>`,
+
+    /* Igreja de Pedra: alvenaria ciclópica aparente, volume simples, campanário lateral */
+    pedra:`${ceu}${chao}
+      <g fill="#8c8175"><rect x="286" y="88" width="6" height="22"/><rect x="280" y="95" width="18" height="6"/></g>
+      <rect x="264" y="112" width="50" height="150" fill="#9c8d7c"/>
+      <path d="M258 114 L289 88 L320 114 Z" fill="#7d6f60"/>
+      <rect x="276" y="130" width="26" height="30" rx="13" fill="#5c4f42"/>
+      <path d="M92 262 L92 150 L188 96 L284 150 L284 262 Z" fill="#a1917f"/>
+      <path d="M84 154 L188 90 L292 154 Z" fill="#857767"/>
+      <g fill="#8d7f6e" stroke="#6f6355" stroke-width="1">
+        <rect x="98" y="160" width="30" height="19" rx="3"/><rect x="132" y="158" width="24" height="21" rx="3"/>
+        <rect x="160" y="162" width="33" height="17" rx="3"/><rect x="197" y="157" width="27" height="22" rx="3"/>
+        <rect x="228" y="161" width="30" height="18" rx="3"/>
+        <rect x="96" y="184" width="26" height="21" rx="3"/><rect x="126" y="186" width="32" height="19" rx="3"/>
+        <rect x="162" y="183" width="25" height="22" rx="3"/><rect x="191" y="185" width="31" height="20" rx="3"/>
+        <rect x="226" y="184" width="28" height="21" rx="3"/>
+        <rect x="99" y="210" width="31" height="20" rx="3"/><rect x="134" y="212" width="26" height="18" rx="3"/>
+        <rect x="222" y="211" width="30" height="19" rx="3"/>
+        <rect x="97" y="235" width="28" height="21" rx="3"/><rect x="129" y="234" width="30" height="22" rx="3"/>
+        <rect x="219" y="236" width="33" height="20" rx="3"/></g>
+      <path d="M166 262 L166 214 Q188 194 210 214 L210 262 Z" fill="#5f4a33"/>
+      <path d="M170 259 L170 216 Q188 199 206 216 L206 259 Z" fill="#7d6244"/>
+      <circle cx="188" cy="140" r="13" fill="#6f6355"/><circle cx="188" cy="140" r="8" fill="#b9a58a"/>`,
+
+    /* São Patrício: capela pequena sobre embasamento com escadaria */
+    patricio:`${ceu}${chao}
+      <g fill="#7a8a6e" opacity=".75">
+        <ellipse cx="52" cy="238" rx="34" ry="24"/><rect x="49" y="236" width="5" height="26" fill="#6b5a42"/>
+        <ellipse cx="352" cy="232" rx="30" ry="21"/><rect x="349" y="230" width="5" height="32" fill="#6b5a42"/></g>
+      <g fill="#8c8175"><rect x="197" y="80" width="6" height="24"/><rect x="191" y="88" width="18" height="5"/></g>
+      <path d="M138 250 L138 148 L200 104 L262 148 L262 250 Z" fill="url(#s-patricio)"/>
+      <path d="M131 152 L200 99 L269 152 Z" fill="#e9dcc4" stroke="#c3ab8b" stroke-width="1.5"/>
+      <path d="M186 250 L186 200 Q200 182 214 200 L214 250 Z" fill="#4c7a5e"/>
+      <path d="M189 247 L189 202 Q200 187 211 202 L211 247 Z" fill="#5f9575"/>
+      <g fill="#cbb896"><rect x="150" y="176" width="14" height="24" rx="7"/><rect x="236" y="176" width="14" height="24" rx="7"/></g>
+      <circle cx="200" cy="140" r="11" fill="#cbb896"/>
+      <g fill="#d6c3a4"><rect x="130" y="250" width="140" height="7"/><rect x="122" y="257" width="156" height="7"/>
+        <rect x="114" y="264" width="172" height="8"/></g>
+      <path d="M200 132 l4 5 h-3 v9 h-2 v-9 h-3 z" fill="#7a8a6e"/>`,
+
+    /* Divino Espírito Santo: capela simples com cruzeiro à frente — a única imagem documentada */
+    espirito:`${ceu}${chao}
+      <path d="M148 254 L148 162 L200 122 L252 162 L252 254 Z" fill="url(#s-espirito)"/>
+      <path d="M141 166 L200 117 L259 166 Z" fill="#ecdfc8" stroke="#c3ab8b" stroke-width="1.5"/>
+      <g fill="#8c8175"><rect x="197" y="98" width="6" height="22"/><rect x="191" y="105" width="18" height="5"/></g>
+      <path d="M188 254 L188 208 Q200 192 212 208 L212 254 Z" fill="#6b5439"/>
+      <circle cx="200" cy="152" r="10" fill="#cbb896"/>
+      <g fill="#cbb896"><rect x="160" y="184" width="12" height="22" rx="6"/><rect x="228" y="184" width="12" height="22" rx="6"/></g>
+      <g stroke="#6b5439" stroke-width="9" stroke-linecap="square">
+        <line x1="92" y1="262" x2="92" y2="160"/><line x1="64" y1="188" x2="120" y2="188"/></g>
+      <path d="M92 150 q -13 -16 0 -26 q 13 10 0 26 z" fill="#d8c49f"/>
+      <g fill="#b99a70" opacity=".6"><ellipse cx="92" cy="264" rx="26" ry="7"/></g>
+      <text x="92" y="286" font-family="Georgia,serif" font-size="10" fill="#7a6449"
+            text-anchor="middle" opacity=".8">o cruzeiro</text>`,
+
+    /* María Auxiliadora: torre-campanário frontal, típica de matriz paraguaia */
+    auxiliadora:`${ceu}${chao}
+      <path d="M110 258 L110 172 L290 172 L290 258 Z" fill="url(#s-auxiliadora)"/>
+      <path d="M104 176 L200 138 L296 176 Z" fill="#ead9bd" stroke="#c3ab8b" stroke-width="1.5"/>
+      <rect x="172" y="60" width="56" height="118" fill="#f6ecd9" stroke="#d3bd9c" stroke-width="1.5"/>
+      <path d="M166 62 L200 24 L234 62 Z" fill="#a4522a"/>
+      <g fill="#8c8175"><rect x="197" y="6" width="6" height="20"/><rect x="191" y="12" width="18" height="5"/></g>
+      <rect x="184" y="76" width="32" height="38" rx="16" fill="#5c4f42"/>
+      <circle cx="200" cy="95" r="9" fill="#c9b391"/>
+      <rect x="186" y="128" width="28" height="16" rx="4" fill="#c9b391"/>
+      <path d="M186 258 L186 212 Q200 194 214 212 L214 258 Z" fill="#6b5439"/>
+      <g fill="#c9b391"><rect x="130" y="196" width="15" height="30" rx="7.5"/><rect x="153" y="196" width="15" height="30" rx="7.5"/>
+        <rect x="232" y="196" width="15" height="30" rx="7.5"/><rect x="255" y="196" width="15" height="30" rx="7.5"/></g>
+      <g fill="#d6c3a4"><rect x="104" y="258" width="192" height="7"/><rect x="96" y="265" width="208" height="8"/></g>`,
+
+    /* Virgen de las Mercedes: capela de bairro, pequena, com sino exposto */
+    mercedes:`${ceu}${chao}
+      <path d="M152 254 L152 168 L200 130 L248 168 L248 254 Z" fill="url(#s-mercedes)"/>
+      <path d="M146 172 L200 126 L254 172 Z" fill="#ecdfc8" stroke="#c3ab8b" stroke-width="1.5"/>
+      <path d="M180 116 L200 100 L220 116 L216 116 L216 128 L184 128 L184 116 Z" fill="#dccaa8" stroke="#c3ab8b" stroke-width="1.2"/>
+      <circle cx="200" cy="119" r="6" fill="#8c7a5e"/>
+      <g fill="#8c8175"><rect x="198" y="84" width="5" height="16"/><rect x="193" y="89" width="15" height="4"/></g>
+      <path d="M190 254 L190 214 Q200 200 210 214 L210 254 Z" fill="#7a5c3c"/>
+      <g fill="#cbb896"><rect x="164" y="190" width="11" height="20" rx="5.5"/><rect x="225" y="190" width="11" height="20" rx="5.5"/></g>
+      <g stroke="#a4522a" stroke-width="2" stroke-dasharray="5 7" fill="none">
+        <path d="M248 240 Q 300 236 340 214"/></g>
+      <text x="300" y="258" font-family="Georgia,serif" font-size="10" fill="#8a5a34"
+            text-anchor="middle">rumo à matriz</text>
+      <g fill="#d6c3a4"><rect x="144" y="254" width="112" height="7"/><rect x="136" y="261" width="128" height="7"/></g>`,
+
+    /* Perpetuo Socorro: capela de bairro com o ícone bizantino na fachada */
+    socorro:`${ceu}${chao}
+      <path d="M140 254 L140 160 L200 114 L260 160 L260 254 Z" fill="url(#s-socorro)"/>
+      <path d="M133 164 L200 109 L267 164 Z" fill="#e7d8bf" stroke="#c3ab8b" stroke-width="1.5"/>
+      <g fill="#8c8175"><rect x="197" y="86" width="6" height="24"/><rect x="191" y="94" width="18" height="5"/></g>
+      <rect x="184" y="140" width="32" height="40" rx="3" fill="#8a6c3e" stroke="#6d5330" stroke-width="1.5"/>
+      <rect x="188" y="145" width="24" height="30" rx="2" fill="#c9a55c"/>
+      <circle cx="200" cy="156" r="7" fill="#7d5f38"/>
+      <path d="M193 170 q7 -7 14 0 z" fill="#7d5f38"/>
+      <path d="M190 254 L190 210 Q200 195 210 210 L210 254 Z" fill="#6b5439"/>
+      <g fill="#cbb896"><rect x="156" y="192" width="12" height="22" rx="6"/><rect x="232" y="192" width="12" height="22" rx="6"/></g>
+      <g fill="#d6c3a4"><rect x="132" y="254" width="136" height="7"/><rect x="124" y="261" width="152" height="7"/></g>
+      <text x="200" y="288" font-family="Georgia,serif" font-size="10.5" fill="#7a6449"
+            text-anchor="middle" opacity=".85">o ícone bizantino na fachada</text>`
+  };
+  return `<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"
+            role="img" aria-label="Ilustração da igreja">${desenhos[tipo]||desenhos.setima}</svg>`;
+}
+
+/* ─────────────────────────────────────────────────────── montar as abas */
+const elAbas = document.getElementById("abas");
+const elPaineis = document.getElementById("paineis");
+
+IGREJAS.forEach((ig, i) => {
+  const b = document.createElement("button");
+  b.className = "aba" + (ig.pendente ? " pendente" : "");
+  b.setAttribute("role","tab");
+  b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+  b.innerHTML = `<span class="n">${ig.n}</span>${ig.curto}`;
+  b.onclick = () => selecionar(i);
+  elAbas.appendChild(b);
+
+  const p = document.createElement("div");
+  p.className = "painel" + (i === 0 ? " ativo" : "");
+  p.setAttribute("role","tabpanel");
+  p.innerHTML = `
+    <div class="igreja">
+      <div class="arte">${arteSVG(ig.arte)}
+        <span class="credito">Ilustração a partir da descrição arquitetônica documentada · não é fotografia</span>
+      </div>
+      <div class="texto">
+        <h3>${ig.nome}</h3>
+        <p class="lugar">${ig.lugar}</p>
+        <div class="tags">${ig.tags.map(t =>
+          `<span class="tag ${t[1]||""}">${t[0]}</span>`).join("")}</div>
+        <div class="blocos">${ig.blocos.map(([t,c]) =>
+          `<div class="bloco"><h4>${t}</h4><p>${c}</p></div>`).join("")}</div>
+      </div>
+    </div>`;
+  elPaineis.appendChild(p);
+});
+
+function selecionar(i){
+  [...elAbas.children].forEach((b,j) => b.setAttribute("aria-selected", j===i ? "true":"false"));
+  [...elPaineis.children].forEach((p,j) => p.classList.toggle("ativo", j===i));
+}
+
+/* ══════════════════════════════════════════════════════ UM DIA NA ROTA */
+const ETAPAS = [
+  ["08h00","Missa na Igreja Matriz de Santo Afonso",
+   "Comece pelo padroeiro. Peça para ver os confessionários dos anos 1930 e os sinos de corda — são o que sobrou intacto da igreja de 1935. Horário a combinar com a paróquia."],
+  ["09h30","Paço Municipal e Praça Álvaro Mascarenhas",
+   "A prefeitura funciona na antiga casa dos padres, erguida em 1932 pelo mesmo construtor da igreja. A praça, a duzentos metros, já se chamou Praça Municipal, Praça João Pessoa e Praça da Bandeira antes de receber o nome do prefeito Álvaro Mascarenhas nos anos 1960."],
+  ["10h15","Igreja de Pedra e o cemitério histórico",
+   "No bairro Água Doce, a igreja de pedra aparente de 1932 e, ali perto, o cemitério que nasceu com os mortos do combate de Nhandipá. É onde está Senhorinha Lopes. Este é o trecho mais forte do roteiro: a pedra, a guerra e a fundação da cidade num raio de trezentos metros."],
+  ["11h30","Monumento Nhandipá e o 10º RC Mec",
+   "O monumento de 1931 marca o local exato da batalha de 11 de maio de 1867. O quartel, de 1919, abriga o Panteão Capitão Pedro Rufino e um museu — visita precisa ser autorizada pela unidade."],
+  ["12h30","Almoço",
+   "A Churrascaria Barril D'Oro serve das 11h30 às 14h30 todos os dias. Peça chipa e sopa paraguaia — os dois são patrimônio alimentar reconhecido desta fronteira."],
+  ["14h00","Capela de São Patrício",
+   "Na chácara do mesmo nome, dentro do perímetro urbano. Uma capela dedicada ao padroeiro da Irlanda erguida por padres americanos no cerrado guarani, entre 1935 e 1940."],
+  ["15h00","A Cruz do Apa e a travessia",
+   "A cruz fincada em 18 de agosto de 1931 no fim da primeira missão redentorista, feita para abrigar as padroeiras dos dois países ao mesmo tempo. Dali, a ponte. Leve o RG e registre a entrada."],
+  ["15h45","Iglesia Matriz María Auxiliadora",
+   "Do outro lado, a matriz de Bella Vista Norte — onde os redentoristas desembarcaram no Paraguai em 27 de abril de 1930, quatro meses antes de cruzarem para o lado brasileiro."],
+  ["16h30","Plaza de los Héroes e o mirante do Apa",
+   "O centro cívico paraguaio e, a poucas quadras, o mirante sobre o rio. É a hora da luz, e é daqui que se entende a geografia inteira do roteiro: duas cidades, um rio, a mesma paisagem."],
+  ["17h30","Volta pela ponte",
+   "Devolva a boleta na saída. Se for julho ou agosto, o dia ainda tem sol para um tereré na praça."]
+];
+document.getElementById("etapas").innerHTML = ETAPAS.map(([h,t,d]) =>
+  `<div class="etapa"><p class="meta">${h}</p><h4>${t}</h4><p>${d}</p></div>`).join("");
+
+/* ═══════════════════════════════════════════════════════════════ CLIMA */
+const CLIMA = [
+  ["jan",32,23,172],["fev",31,23,146],["mar",31,22,124],["abr",30,20,100],
+  ["mai",26,17,112],["jun",25,16, 89],["jul",25,15, 56],["ago",28,17, 59],
+  ["set",30,19,101],["out",31,21,155],["nov",31,22,164],["dez",32,23,185]
+];
+const MELHOR = new Set(["mai","jun","jul","ago","set"]);
+const maxChuva = Math.max(...CLIMA.map(c=>c[3]));
+
+document.getElementById("g-chuva").innerHTML = CLIMA.map(([m,,,ch]) => {
+  const h = Math.round((ch/maxChuva)*100);
+  const cor = MELHOR.has(m) ? "#4a6141" : "#3d6b8a";
+  return `<div class="col ${MELHOR.has(m)?"melhor":""}" title="${m}: ${ch} mm">
+    <span class="v">${ch}</span>
+    <span class="b" style="height:${h}%;background:${cor}"></span>
+    <span class="m">${m}</span></div>`;
+}).join("");
+
+const tMin = 12, tMax = 34;
+document.getElementById("g-temp").innerHTML = CLIMA.map(([m,mx,mn]) => {
+  const alt = ((mx-mn)/(tMax-tMin))*100;
+  const base = ((mn-tMin)/(tMax-tMin))*100;
+  return `<div class="fcol" title="${m}: ${mn}° a ${mx}°">
+    <div class="amplitude" style="height:${alt}%;margin-bottom:${base}%"></div>
+    <span class="m">${m}</span></div>`;
+}).join("");
+
+/* ═════════════════════════════════════════════════════════ MESA E CAMA */
+const SERVICOS = [
+  ["Cama","Hotel Pousada da Fronteira","Av. Teodoro Sativa, 1486, Centro — Bela Vista/MS","(67) 3439-2182"],
+  ["Cama","Pousada Princesa do Apa","Rua Pantaleão Ramos, 332, Água Doce — Bela Vista/MS · café da manhã incluso","(67) 3439-1580"],
+  ["Cama","Pousada Água Doce","Rodovia BR-060, s/n — Bela Vista/MS","não publicado"],
+  ["Cama","Pousada Bacuri do Apa","Rod. Bela Vista–Caieiras, km 40, Barra do Piri · zona rural","(67) 99986-6000"],
+  ["Cama · Paraguai","Hotel Dos Fronteras","Bella Vista Norte · telefone de reportagem de 2021, revalidar","(038) 238-505"],
+  ["Mesa","Churrascaria Barril D'Oro","Av. Teodoro Sativa, 616, Centro · 11h30 às 14h30, todos os dias","(67) 3439-1548"],
+  ["Mesa","Restaurante Bisteca na Chapa","Centro · há divergência de endereço entre as fontes","(67) 99909-3555"],
+  ["Mesa","Restaurante Dona Maria","Av. Teodoro Sativa, 1547, Água Doce","(67) 99929-3805"],
+  ["Mesa","Ramãos Café","R. Barão do Melgaço, 1994, Centro II","(67) 99601-3991"],
+  ["Mesa","Rota 66 Espetaria e Grill","R. Duque de Caxias, 680, Centro II","não publicado"],
+  ["Patrimônio","Bar Bossa Nova","R. Antonio Maria Coelho, Centro I · construído em 1939 por Luiz Lousinha junto ao Cine São José. Hoje é da Prefeitura — é patrimônio, não bar em funcionamento.","Sec. de Turismo (67) 3439-5100"]
+];
+document.getElementById("mesa-cama").innerHTML = SERVICOS.map(([tipo,nome,desc,tel]) =>
+  `<div class="cartao"><p class="tipo">${tipo}</p><h4>${nome}</h4><p>${desc}</p>
+   <p class="contato">${tel}</p></div>`).join("");
+
+/* ═══════════════════════════════════════════════════════════════ O MAPA
+   Mapbox como mapa principal, Leaflet/OpenStreetMap como reserva automática.
+   Não é excesso de zelo: neste mesmo sistema um mapa Mapbox já ficou preto em
+   produção porque o token não tinha o escopo de tiles, e o erro passou dias sem
+   ninguém notar — porque falhava calado. Aqui, se o Mapbox não responder por
+   qualquer motivo (token vencido, escopo faltando, cota estourada, CDN fora),
+   o mapa se redesenha sozinho em OpenStreetMap e avisa na tela. Mapa de roteiro
+   turístico nunca pode aparecer em branco para o visitante.
+
+   O MAPA VAI DE OpenStreetMap POR PADRÃO, e é de propósito.
+
+   Tentei publicar com Mapbox e o GitHub barrou o commit: o scanner de segredos
+   identificou o token dentro do index.html. O token é do tipo público (pk.),
+   que de fato roda no navegador de qualquer site Mapbox — mas ele está SEM
+   restrição de domínio, e um token assim num repositório público é copiado por
+   robô em questão de horas e a cota de mapas de quem é dono some. O GitHub tem
+   razão em barrar, então não passei por cima.
+
+   Para ligar o Mapbox: entre na conta Mapbox, em Account → Tokens, restrinja o
+   token às URLs deste site (URL restrictions), e só então cole o token na
+   constante abaixo. Com a restrição ativa, o token exposto não serve para mais
+   ninguém. Enquanto ela estiver vazia, o mapa usa OpenStreetMap — que não pede
+   token, não tem cota e não vence. */
+const MAPBOX_TOKEN = "";
+
+const PONTOS = [
+  {n:"1", nome:"Igreja Matriz de Santo Afonso", tipo:"igreja", lat:-22.1045, lng:-56.5350,
+   aprox:true, det:"1932–1935 · padroeiro da cidade · festa em 1º de agosto"},
+  {n:"2", nome:"Igreja de Pedra “São Geraldo”", tipo:"igreja", lat:-22.1060, lng:-56.5340,
+   aprox:true, det:"Concluída em 24 de janeiro de 1932 · alvenaria de pedra"},
+  {n:"5", nome:"Iglesia Matriz María Auxiliadora", tipo:"igreja", lat:-22.12096, lng:-56.51476,
+   aprox:false, det:"Bella Vista Norte · festa em 24 de maio · berço dos redentoristas no Paraguai"},
+  {nome:"10º RC Mec — Regimento Antônio João", tipo:"historia", lat:-22.10282, lng:-56.53980,
+   aprox:false, det:"Edificação de 1919 · abriga o Panteão Capitão Pedro Rufino e um museu"},
+  {nome:"Cemitério Histórico", tipo:"historia", lat:-22.1063, lng:-56.5335, aprox:true,
+   det:"Bairro Água Doce · túmulo de Senhorinha Lopes († 1913) e dos mortos de Nhandipá"},
+  {nome:"Rodoviária de Bela Vista", tipo:"historia", lat:-22.10323, lng:-56.52962, aprox:false,
+   det:"Viação Cruzeiro do Sul · duas saídas por dia para Campo Grande"},
+  {nome:"Hotel Pousada da Fronteira", tipo:"servico", lat:-22.10223, lng:-56.525673, aprox:true,
+   det:"Av. Teodoro Sativa, 1486, Centro · (67) 3439-2182"},
+  {nome:"Churrascaria Barril D'Oro", tipo:"servico", lat:-22.110079, lng:-56.52702, aprox:true,
+   det:"Av. Teodoro Sativa, 616 · almoço das 11h30 às 14h30, todos os dias · (67) 3439-1548"},
+  {nome:"Aduana — Receita Federal", tipo:"fronteira", lat:-22.114373, lng:-56.524555, aprox:false,
+   det:"Lado brasileiro · fim da BR-060"},
+  {nome:"Migraciones Paraguay", tipo:"fronteira", lat:-22.115268, lng:-56.518774, aprox:false,
+   det:"Lado paraguaio · cerca de 600 m da aduana brasileira"},
+  {nome:"Mirador de Bella Vista Norte", tipo:"fronteira", lat:-22.11581, lng:-56.51995, aprox:false,
+   det:"Vista do Rio Apa · provável mirante da Playa Municipal"},
+  {nome:"Plaza de los Héroes", tipo:"historia", lat:-22.11958, lng:-56.51690, aprox:false,
+   det:"Centro cívico de Bella Vista Norte, junto à Municipalidad"}
+];
+const CORES = {igreja:"#a4522a", historia:"#4a6141", servico:"#c08a2e", fronteira:"#3d6b8a"};
+const ROTA = PONTOS.filter(p => p.n).map(p => [p.lng, p.lat]);
+const PONTE = [[-56.524555,-22.114373],[-56.518774,-22.115268]];
+
+function bolha(p){
+  const tam = p.n ? 30 : 22, d = document.createElement("div");
+  d.className = "marcador" + (p.aprox ? " aprox" : "");
+  d.style.cssText = `width:${tam}px;height:${tam}px;background:${CORES[p.tipo]};cursor:pointer`;
+  d.textContent = p.n || "";
+  return d;
+}
+function textoPopup(p){
+  return `<div class="pop"><b>${p.nome}</b><small>${p.det}${
+    p.aprox ? "<br><em>Localização aproximada — a confirmar com GPS.</em>" : ""}</small></div>`;
+}
+function avisoReserva(){
+  const el = document.getElementById("aviso-mapa");
+  if (el) el.hidden = false;
+}
+
+/* ------------------------------------------------------------- reserva */
+function mapaReserva(){
+  try {
+    if (typeof L === "undefined") throw new Error("Leaflet também não carregou");
+    document.getElementById("mapa").innerHTML = "";
+    const m = L.map("mapa", {scrollWheelZoom:false}).setView([-22.1115,-56.5290], 14);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {attribution:"&copy; OpenStreetMap &copy; CARTO", maxZoom:19}).addTo(m);
+    PONTOS.forEach(p => {
+      const tam = p.n ? 30 : 22;
+      L.marker([p.lat,p.lng], {icon: L.divIcon({className:"", iconSize:[tam,tam],
+        iconAnchor:[tam/2,tam/2], html: bolha(p).outerHTML})})
+        .addTo(m).bindPopup(textoPopup(p));
+    });
+    L.polyline(ROTA.map(c => [c[1],c[0]]),
+      {color:"#a4522a", weight:3, opacity:.55, dashArray:"7 9"}).addTo(m);
+    L.polyline(PONTE.map(c => [c[1],c[0]]), {color:"#3d6b8a", weight:4, opacity:.7}).addTo(m);
+    m.on("click", () => m.scrollWheelZoom.enable());
+    if (MAPBOX_TOKEN) avisoReserva();
+  } catch (e) {
+    document.getElementById("mapa").innerHTML =
+      '<div style="height:100%;display:flex;flex-direction:column;align-items:center;' +
+      'justify-content:center;text-align:center;padding:34px;color:#6f5847;background:#f4ece0">' +
+      '<p style="font-family:Georgia,serif;font-size:19px;margin-bottom:8px">O mapa não abriu</p>' +
+      '<p style="font-size:14px;max-width:42ch;margin:0">Recarregue a página com conexão. ' +
+      'O resto do roteiro continua abaixo.</p></div>';
+  }
+}
+
+/* -------------------------------------------------------------- Mapbox */
+(function(){
+  if (!MAPBOX_TOKEN || typeof mapboxgl === "undefined"
+      || !mapboxgl.supported || !mapboxgl.supported()) {
+    return mapaReserva();
+  }
+  let caiu = false;
+  const cair = () => { if (!caiu) { caiu = true; mapaReserva(); } };
+
+  try {
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    const mapa = new mapboxgl.Map({
+      container:"mapa", style:"mapbox://styles/mapbox/outdoors-v12",
+      center:[-56.5290,-22.1115], zoom:13.4, scrollZoom:false, cooperativeGestures:true
+    });
+    mapa.addControl(new mapboxgl.NavigationControl({showCompass:false}), "top-right");
+    mapa.addControl(new mapboxgl.FullscreenControl(), "top-right");
+    mapa.addControl(new mapboxgl.ScaleControl({unit:"metric"}), "bottom-left");
+
+    /* Só o erro de AUTENTICAÇÃO ou de ESTILO derruba para a reserva. Um tile
+       solto que falha não justifica trocar o mapa inteiro debaixo do usuário. */
+    mapa.on("error", ev => {
+      const st = ev && ev.error && ev.error.status;
+      const msg = String((ev && ev.error && ev.error.message) || "");
+      if (st === 401 || st === 403 || st === 402 || /token|style|Unauthorized/i.test(msg)) {
+        console.warn("Mapbox recusou; usando OpenStreetMap.", st, msg);
+        cair();
+      }
+    });
+    /* Se em 9 segundos o estilo não carregou, é porque não vai carregar. */
+    const relogio = setTimeout(() => { if (!mapa.isStyleLoaded()) cair(); }, 9000);
+
+    mapa.on("load", () => {
+      clearTimeout(relogio);
+
+      mapa.addSource("rota", {type:"geojson",
+        data:{type:"Feature", geometry:{type:"LineString", coordinates:ROTA}}});
+      mapa.addLayer({id:"rota", type:"line", source:"rota",
+        layout:{"line-cap":"round"},
+        paint:{"line-color":"#a4522a","line-width":3.5,"line-opacity":.6,"line-dasharray":[2,2.2]}});
+
+      mapa.addSource("ponte", {type:"geojson",
+        data:{type:"Feature", geometry:{type:"LineString", coordinates:PONTE}}});
+      mapa.addLayer({id:"ponte", type:"line", source:"ponte",
+        layout:{"line-cap":"round"}, paint:{"line-color":"#3d6b8a","line-width":5,"line-opacity":.75}});
+
+      PONTOS.forEach(p => {
+        new mapboxgl.Marker({element: bolha(p)})
+          .setLngLat([p.lng,p.lat])
+          .setPopup(new mapboxgl.Popup({offset:16, maxWidth:"270px"}).setHTML(textoPopup(p)))
+          .addTo(mapa);
+      });
+
+      const caixa = new mapboxgl.LngLatBounds();
+      PONTOS.forEach(p => caixa.extend([p.lng,p.lat]));
+      mapa.fitBounds(caixa, {padding:{top:62,bottom:52,left:52,right:52}, duration:0});
+    });
+  } catch (e) {
+    console.warn("Mapbox falhou na inicialização:", e);
+    cair();
+  }
+})();
+</script>
+</body>
+</html>
